@@ -1,14 +1,28 @@
-# This is the main script where you will orchestrate the ETL process, feel free to completely modify the files/structure as you see fit.
+
+from api_client import fetch_users, fetch_posts
+from transform_data import add_post_status
+from load_to_database import load_data
+
+
 if __name__ == "__main__":
+
     print("ETL Job Started")
 
-    # Extract phase
-    # TODO: Implement data extraction logic
+    # 1. Extract
+    users = fetch_users()
+    posts = fetch_posts()
 
-    # Transform phase
-    # TODO: Implement data transformation logic
+    print("Data extraction completed")
 
-    # Load phase
-    # TODO: Implement data loading logic
+    # 2. Transform
+    
+    posts = add_post_status(posts)
+
+    print("Data transformation completed")
+
+    # 3. Load
+    load_data(posts, users)
+
+    print("Data loading completed")
 
     print("ETL Job Finished")

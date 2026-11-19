@@ -1,60 +1,198 @@
-# Senior Data Engineer Tech Task
+# Senior Data Engineer Technical Assignment
 
-## Introduction
-This technical challenge is designed to test your expertise in Python and SQL for ETL. 
+## 1. Project Overview
 
-As a Senior Data Engineer, your task is to design a robust ETL pipeline to extract data from an open source API, carry out specified transformations (alternatively, transformations after loading), and load the data into a local database (open for your choice e.g. sqlite3) for analysis. Specifically, you will work with JSONPlaceholder (https://jsonplaceholder.typicode.com/) to simulate working with data from a simple blogging platform.
+This project implements an ETL pipeline using Python and SQL to extract data from the JSONPlaceholder API, transform the data, and load it into a local SQLite database.
 
-**!!! NOTE: You are not required to spend more than 1.5 Hrs on this task. You are not expected to fully complete this task in this timeframe so if you get stuck, simply proceed with another part of this task and note in your README what steps you would have taken to complete the task.**
+The pipeline processes user and post information from the following API endpoints:
 
-## Getting Started
-1. Read through all the instructions before starting.
-2. Clone this repository. Placeholder directories and files have been created to get you started.
-3. Set up a new Python virtual environment and install required dependencies.
-4. Follow the instructions outlined in the [Task Details](#task-details) section.
-   1. [ETL Challenge](#etl-challenge) - Build an ETL pipeline using Python and SQL.
-   2. [Analysis Challenge](#analysis-challenge) - Write SQL queries to answer the posed questions
-5. Write unit tests to cover your code.
+- https://jsonplaceholder.typicode.com/users
+- https://jsonplaceholder.typicode.com/posts
 
-## Task Details
-### ETL Challenge
+## 2. Technologies Used
 
-You may opt to use ELT processes instead of ETL. If you do, use your personal judgement on which steps should follow the 'Load' Step.
+- Python
+- SQL
+- SQLite
+- REST API
+- Requests library
+- Pytest
 
-1. **Extract**: Retrieve all posts and user data from the `/posts` and `/users` endpoints of JSONPlaceholder API.
-2. **Transform**:
-   - Parse any embedded JSON structures into a format suitable for your database.
-   - Add a computed `status` field to posts: if a post body exceeds 150 characters, set `status` to `lengthy`, and `concise` otherwise.
-   - Combine posts with user details based on `userId` to create enriched post records.
-3. **Load**:
-   - In your database, load the data into table(s) prefixed with your initials, e.g. John Smith will create tables prefixed `js_` 
+## 3. Project Structure
 
-### Analysis Challenge
-Write SQL queries to answer the following questions:
-1. Find the top 5 users that post the longest posts (excl. the post title).
-2. For each of these top 5 users, calculate their average post length (incl. the post title).
-3. Identify the day of the week when the most `lengthy` posts are created (mock date using the `id` of posts as the day offset from the UNIX epoch).
+## 3. Project Structure
 
-Make sure that your queries can be run against the database created in the ETL.
+```text
+SeniorDataEngineerTechTaskSuvarna/
+│
+├── _evidence/
+│   ├── evidence.txt
+│   ├── unit_tests.png
+│   ├── etl_execution.png
+│   └── sql_results.png
+│
+├── etl_pipeline/
+│   ├── api_client.py
+│   ├── transform_data.py
+│   ├── load_to_database.py
+│   ├── main.py
+│   ├── verify_database.py
+│   ├── test_api.py
+│   ├── test_transform.py
+│   ├── test_load.py
+│   └── requirements.txt
+│
+├── sql/
+│   ├── analysis_queries.sql
+│   ├── run_sql.py
+│   ├── schema.sql
+│   └── sql_answers.md
+│
+├── senior_data.db
+├── README.md
+└── .gitignore
+```
 
-## Deliverables
-1. [ ] **Python ETL** - A Python ETL pipeline script `main.py` that is ready to run.
-2. [ ] **Unit Tests** - A collection of unit tests for your ETL pipeline.
-3. [ ] **SQL** - SQL schema creation file and any additional SQL query files.
-4. [ ] **SQL Answers** - Answers to the SQL analysis challenge questions in a Markdown file, including the SQL queries used.
-5. [ ] **Evidence** - Evidence of successful ETL processing, such as unit test outputs, screenshots, and data files.
-6. [ ] **README** - A detailed README.md that includes all required documentation.
-7. [ ] Any additional documentation you think would be helpful for understanding your approach.
 
-## Evaluation Criteria
-1. [ ] **Code Quality**: Efficient data manipulation with Python and SQL. Clear, well-structured code that follows best practice to a reasonable extent.
-2. [ ] **SQL Proficiency**: Demonstrate query optimization and complexity in SQL through the analysis challenge.
-3. [ ] **Error Handling**: Gracefully handle potential errors or irregularities in inputs.
-4. [ ] **Testing**: Include unit tests to verify each part of the ETL process.
-5. [ ] **Documentation**: A clear README.md that explains setup, execution, any assumptions made, and any other information you would include in a README.
+*Adjust the structure if your actual database or files are stored in different folders.*
 
-## How To Submit Your Solution
-Fork the repository.
-Branch this repository following this format `applicant-[yourGithubUsername]`, e.g. user `john-smith` should create a branch `applicant-john-smith`. Commit your changes to your branch, and send a pull request to the main branch. We will review your submission and get back to you with our feedback.
+## 4. ETL Process
 
-Good luck!
+### Extract
+
+- Connect to JSONPlaceholder API using Python Requests.
+- Fetch all posts from the `/posts` endpoint.
+- Fetch all users from the `/users` endpoint.
+- Retrieve JSON responses and convert them into Python objects.
+
+### Transform
+
+- Calculate the length of each post body.
+- Add a status field:
+  - If body length is greater than 150 characters, status is `lengthy`.
+  - Otherwise, status is `concise`.
+- Preserve the original post data.
+
+### Load
+
+- Use SQLite as the local database.
+- Create two tables:
+  - `KS_users`
+  - `KS_posts`
+- Insert user and post records into their respective tables.
+- Maintain the relationship between posts and users using `userId`.
+
+## 5. Database Details
+
+Database name: `senior_data.db`
+
+Tables:
+
+**KS_users**
+- id
+- name
+- username
+- email
+- city
+- zipcode
+- company_name
+
+**KS_posts**
+- id
+- userId
+- title
+- body
+- status
+
+## 6. Execution Instructions
+
+### Prerequisites
+
+- Python 3
+- pip
+
+### Setup
+
+Create a virtual environment:
+
+```bash
+python -m venv venv
+```
+
+Activate on Windows:
+
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+Install dependencies:
+
+```bash
+pip install -r etl_pipeline/requirements.txt
+```
+
+### Run the ETL pipeline
+
+From the project root directory:
+
+```bash
+python etl_pipeline/main.py
+```
+
+### Verify database records
+
+```bash
+python etl_pipeline/verify_database.py
+```
+
+## 7. SQL Analysis
+
+The SQL analysis is available in `sql/analysis_queries.sql`.
+
+The assignment covers:
+
+1. Top five users based on average post body length, excluding titles.
+2. Average post length, including title and body, for those five users.
+3. Weekday with the highest number of lengthy posts, using post IDs as day offsets from the UNIX epoch.
+
+## 8. Data Validation
+
+The database verification script checks:
+
+- Total number of users and posts.
+- Duplicate user and post IDs.
+- Missing user names and email addresses.
+- Posts without matching users.
+- Lengthy and concise post counts.
+
+## 9. Testing
+
+Unit tests are included for the API extraction, transformation and database loading components.
+
+Run tests using:
+
+```bash
+python -m pytest -v
+```
+
+## 10. Execution Results
+
+The ETL pipeline was executed successfully during development.
+
+Observed extraction and loading counts:
+
+- Users fetched and loaded: 10
+- Posts fetched and loaded: 100
+- Lengthy posts: 62
+- Concise posts: 38
+
+## 11. Error Handling and Assumptions
+
+- HTTP errors are checked using `raise_for_status()`.
+- The pipeline uses SQLite for local data storage.
+- Post status is calculated using the specified 150-character threshold.
+- Post and user records are related using `posts.userId = users.id`.
+
+## 12. Conclusion
+
+This project demonstrates an end-to-end Python and SQL ETL pipeline, including API extraction, data transformation, SQLite loading, data validation and SQL analysis. 
